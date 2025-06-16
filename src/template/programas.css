@@ -1,0 +1,27 @@
+.programas-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 30px;
+    text-align: center;
+    background-color: #f5f5f5;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .programas-container h2 {
+    color: #2e5b97;
+    margin-bottom: 20px;
+  }
+  
+  .lista-programas {
+    list-style-type: square;
+    padding-left: 20px;
+    text-align: left;
+    margin-top: 20px;
+  }
+  
+  .lista-programas li {
+    margin: 8px 0;
+    font-size: 16px;
+  }
+  

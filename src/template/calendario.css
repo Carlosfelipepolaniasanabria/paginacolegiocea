@@ -1,0 +1,37 @@
+.calendario-container {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #f0f6ff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    text-align: center;
+  }
+  
+  .calendario-container h2 {
+    color: #1e3a8a;
+    margin-bottom: 20px;
+  }
+  
+  .calendario-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+  }
+  
+  .calendario-tabla th,
+  .calendario-tabla td {
+    padding: 12px;
+    border: 1px solid #b0c4de;
+    text-align: center;
+  }
+  
+  .calendario-tabla th {
+    background-color: #dce8ff;
+    color: #1e3a8a;
+  }
+  
+  .calendario-tabla tr:nth-child(even) {
+    background-color: #f7faff;
+  }
+  
