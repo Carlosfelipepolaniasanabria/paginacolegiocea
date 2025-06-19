@@ -7,8 +7,8 @@ pipeline {
         DOCKER_IMAGE_NAME = 'carlosfelipepolaniasanabria/paginacolegiocea'
     }
 
-    stages {
-        stage('Descargar Repositorio') {
+   stages {
+        stage('Clone Repository') {
             steps {
                 checkout([
                     $class: 'GitSCM',
@@ -18,45 +18,47 @@ pipeline {
             }
         }
 
-        stage('Instalar Dependencias') {
+        stage('Install Dependencies') {
             steps {
                 sh 'npm install'
             }
         }
 
-		stage('Login a Docker Hub') {
+        stage('Docker Login') {
             steps {
-                script {
-                    // Login a Docker Hub usando las credenciales almacenadas
-                    sh "echo ${env.DOCKER_HUB_CREDENTIALS_PSW} | docker login -u ${env.DOCKER_HUB_CREDENTIALS_USR} --password-stdin"
-                }
+                sh """
+                    docker login -u ${env.DOCKER_HUB_CREDENTIALS_USR} -p ${env.DOCKER_HUB_CREDENTIALS_PSW}
+                """
             }
         }
 
-        stage('Construir Imagen Docker') {
+        stage('Build Docker Image') {
             steps {
                 script {
-                    // Usamos el número de build de Jenkins para versionar
                     def buildNumber = env.BUILD_NUMBER
-                    
-                    // Construir imagen con tag del build number y latest
-                    docker.build("${env.DOCKER_IMAGE_NAME}:${buildNumber}")
-                    docker.build("${env.DOCKER_IMAGE_NAME}:latest")
+                    sh """
+                        docker build -t ${env.DOCKER_IMAGE_NAME}:${buildNumber} .
+                        docker tag ${env.DOCKER_IMAGE_NAME}:${buildNumber} ${env.DOCKER_IMAGE_NAME}:latest
+                    """
                 }
             }
         }
 
-        stage('Push a Docker Hub') {
+        stage('Push to Docker Hub') {
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', env.DOCKER_HUB_CREDENTIALS) {
-                        def buildNumber = env.BUILD_NUMBER
-                        
-                        // Hacer push de ambas versiones
-                        docker.image("${env.DOCKER_IMAGE_NAME}:${buildNumber}").push()
-                        docker.image("${env.DOCKER_IMAGE_NAME}:latest").push()
-                    }
+                    def buildNumber = env.BUILD_NUMBER
+                    sh """
+                        docker push ${env.DOCKER_IMAGE_NAME}:${buildNumber}
+                        docker push ${env.DOCKER_IMAGE_NAME}:latest
+                    """
                 }
+            }
+        }
+
+        stage('Docker Logout') {
+            steps {
+                sh 'docker logout'
             }
         }
     }
